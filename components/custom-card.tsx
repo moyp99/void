@@ -1,0 +1,135 @@
+import {Avatar, Card, Divider, Flex, Group, Text} from "@mantine/core";
+import Image from "next/image";
+import {CalendarIcon, ClockIcon, MapIcon} from "@heroicons/react/24/solid";
+import dayjs from "dayjs";
+import {MatchResponse, PlayerMatchData, Players} from "@/local-types";
+
+type CustomCard = {
+    match: MatchResponse
+    playerName: string;
+    tag: string;
+}
+
+export default function CustomCard({match, playerName, tag}:CustomCard){
+
+    const findPlayerInMatch = (players: Players): PlayerMatchData | undefined => {
+        return players.all_players.find((player) => player.name === playerName && player.tag === tag);
+    };
+
+    function secondsToString(seconds: number): string {
+        const hour = Math.floor(seconds / 3600);
+        const minute = Math.floor((seconds / 60) % 60);
+        const second = seconds % 60;
+
+        const formattedHour = hour < 10 ? '0' + hour : hour.toString();
+        const formattedMinute = minute < 10 ? '0' + minute : minute.toString();
+        const formattedSecond = second < 10 ? '0' + second : second.toString();
+
+        return formattedHour + ':' + formattedMinute + ':' + formattedSecond;
+    }
+
+    return <Card
+        className='w-[300px] h-[360px] overflow-x-hidden bg-card-gradient '
+        shadow='sm'
+        padding='lg'
+        radius='md'
+        withBorder
+    >
+        <Card.Section className='relative'>
+            <Image
+                className='absolute right-[-64px] top-0 w-[500px] h-[500px] drop-shadow-[-5px_6px_2px_#25181854]'
+                src={
+                    findPlayerInMatch(match.players)?.assets.agent.full ??
+                    '/valorant-placeholder.png'
+                }
+                width='0'
+                height='0'
+                sizes='100vw'
+                alt={findPlayerInMatch(match.players)?.character ?? 'valorant-placeholder'}
+            />
+        </Card.Section>
+
+        <Group justify='space-between' mt='md' mb='xs'>
+            <Avatar
+                src={findPlayerInMatch(match.players)?.assets.card.small}
+                alt={findPlayerInMatch(match.players)?.name ?? 'avatar'}
+            />
+            <Text className='font-krona text-white text-3xl z-10 '>
+                {match.teams.red.has_won &&
+                findPlayerInMatch(match.players)?.team.toLowerCase() === 'red'
+                    ? 'WON'
+                    : 'LOST'}
+            </Text>
+        </Group>
+
+        <Flex direction='column' align='start' justify="space-evenly" wrap='wrap' className='max-w-[60%] z-10 h-[200px]'>
+            <Group gap='0'>
+                <MapIcon className='text-white h-4 w-4 mr-1' />
+                <Text c='white' mr='0.5rem'>
+                    Map:
+                </Text>
+                <Text c='white' fw='700'>
+                    {match.metadata.map}
+                </Text>
+            </Group>
+            <Group gap='0' wrap='wrap' className='max-w-[60%] z-10'>
+                <CalendarIcon className='text-white h-4 w-4 mr-1' />
+                <Text c='white' mr='0.25rem'>
+                    Date:
+                </Text>
+                <Text c='white' fw='700'>
+                    {dayjs(match.metadata.game_start_patched).format("YYYY-MM-DD HH:MM")}
+                </Text>
+            </Group>
+            <Group gap='0' wrap='wrap' className='max-w-[60%] z-10'>
+                <ClockIcon className='text-white h-4 w-4 mr-1' />
+                <Text c='white' mr='0.25rem'>
+                    Duration:
+                </Text>
+                <Text c='white' fw='700'>
+                    {secondsToString(match.metadata.game_length) }
+                </Text>
+            </Group>
+        </Flex>
+
+        <Flex
+            className='w-[260px] absolute bg-white bottom-0'
+            direction='column'
+            align='center'
+            mt='md'
+            mb='xs'
+        >
+            <Text size='sm' className='text-black'>
+                Agent: {findPlayerInMatch(match.players)?.character}
+            </Text>
+            <Group justify='space-evenly' className='bg-black border border-white p-2 w-full'>
+                <Flex direction='column' align='center'>
+                    <Text size='xs' className='text-white'>
+                        KILLS
+                    </Text>
+                    <Text size='xs' fw='700' className='text-white'>
+                        {findPlayerInMatch(match.players)?.stats.kills}
+                    </Text>
+                </Flex>
+                <Divider orientation='vertical' />
+                <Flex direction='column' align='center'>
+                    <Text size='xs' className='text-white'>
+                        DEATHS
+                    </Text>
+                    <Text size='xs' fw='700' className='text-white'>
+                        {findPlayerInMatch(match.players)?.stats.deaths}
+                    </Text>
+                </Flex>
+                <Divider orientation='vertical' />
+                <Flex direction='column' align='center'>
+                    <Text size='xs' className='text-white'>
+                        ASSISTS
+                    </Text>
+                    <Text size='xs' fw='700' className='text-white'>
+                        {findPlayerInMatch(match.players)?.stats.assists}
+                    </Text>
+                </Flex>
+            </Group>
+        </Flex>
+    </Card>
+}
