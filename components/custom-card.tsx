@@ -30,7 +30,7 @@ export default function CustomCard({match, playerName, tag}:CustomCard){
 
     return <Card
         className='w-[300px] h-[360px] overflow-x-hidden bg-card-gradient '
-        shadow='sm'
+        shadow='md'
         padding='lg'
         radius='md'
         withBorder

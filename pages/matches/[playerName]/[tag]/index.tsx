@@ -40,13 +40,13 @@ export default function PlayerMatches() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div className='flex flex-col align-center'>
-        <Title className='mb-4'>
+        <Title className='mb-4 w-full text-center'>
           {playerName}#{tag}&apos;s recent matches
         </Title>
         <Grid>
           {isLoading &&
-            [1, 2, 3, 4, 5, 6].map((num) => (
-              <Grid.Col key={num} span={4}>
+            [1, 2, 3, 4, 5].map((num) => (
+              <Grid.Col className={'flex justify-center m-auto'} key={num} span={4}>
                 <Skeleton height={360} width={300} />
               </Grid.Col>
             ))}

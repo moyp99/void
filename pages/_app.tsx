@@ -8,7 +8,7 @@ import { store } from '@/store/store';
 import ThemeProvider from '@/providers/ThemeProvider';
 import Link from 'next/link';
 import { Region } from '@/local-types';
-import MenuItems from "@/components/menu-items";
+import NavMenuItems from "@/components/nav-menu-items";
 
 export function App({ Component, pageProps }: AppProps) {
   return (
@@ -19,7 +19,7 @@ export function App({ Component, pageProps }: AppProps) {
             <Link href='/'>
               <Text fw={700}>(Game) Valorant</Text>
             </Link>
-            <MenuItems/>
+            <NavMenuItems/>
           </AppShell.Header>
           <AppShell.Main className="m-auto max-w-7xl">
             <Component {...pageProps} />

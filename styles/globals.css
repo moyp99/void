@@ -10,11 +10,11 @@
     padding: 0 1rem;
 }
 
-/*Scrollbar styles*/
+
 /* Firefox */
 * {
     scrollbar-width: thin;
-    scrollbar-color: #ff4654 #ffffff;
+    scrollbar-color: theme("colors.red-valorant") #fff;
 }
 
 /* Chrome, Edge, and Safari */
@@ -27,7 +27,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: #ff4654;
+    background-color: theme("colors.red-valorant");
     border-radius: 10px;
     border: none;
 }

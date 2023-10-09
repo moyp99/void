@@ -122,7 +122,7 @@ export default function PlayersLeaderboard({
         opacity={0.75}
         color='#000'
         zIndex={20}
-        loaderProps={{ color: '#FF4654', type: 'bars' }}
+        loaderProps={{ color: 'red-valorant', type: 'bars' }}
       />
     </Card>
   );

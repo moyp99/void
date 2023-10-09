@@ -1,4 +1,4 @@
-import { Stack, Grid, Card, Text } from '@mantine/core';
+import { Stack, Card, Text, Skeleton } from '@mantine/core';
 import Image from 'next/image';
 
 interface CardProps {
@@ -7,30 +7,37 @@ interface CardProps {
   threshold?: number;
   imgWidth?: number;
   imgHeight?: number;
+  isLoading?: boolean;
 }
 
 export default function BadgeCard({
   title,
   imageSrc,
-  threshold,
+  threshold = 0,
   imgWidth = 64,
-  imgHeight = 64
+  imgHeight = 64,
+  isLoading
 }: CardProps) {
   return (
-      <Card shadow='md'>
-        <Stack align='center' gap='xs'>
-          <Image
-            width={imgWidth}
-            height={imgHeight}
-            className={`w-[${imgWidth}px] h-[${imgHeight}px]`}
-            src={imageSrc ?? ''}
-            alt={title}
-          />
-          <Text className={"text-center"}>{title}</Text>
-          <Text size='lg' c='#FF4654' fw={700}>
+    <Card shadow='md'>
+      <Stack align='center' gap='xs'>
+        <Image
+          width={imgWidth}
+          height={imgHeight}
+          style={{ height: `${imgHeight}px`, width: `${imgWidth}px` }}
+          src={imageSrc ?? ''}
+          alt={title}
+        />
+        <Text className={'text-center'}>{title}</Text>
+        <Text className={'text-center'}>Threshold:</Text>
+        {isLoading ? (
+          <Skeleton w={48} h={24} />
+        ) : (
+          <Text size='lg' c='red-valorant' fw={700}>
             {threshold}
           </Text>
-        </Stack>
-      </Card>
+        )}
+      </Stack>
+    </Card>
   );
 }

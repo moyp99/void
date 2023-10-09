@@ -47,6 +47,7 @@ export default function Home() {
               immortal3Threshold={data?.immortal_3_threshold}
               radiantThreshold={data?.radiant_threshold}
               totalPlayers={data?.total_players}
+              isLoading={isLoading}
             />
             <PlayersLeaderboard
               data={data!}
@@ -63,5 +64,3 @@ export default function Home() {
     </>
   );
 }
-
-//TODO: change main color to #FF4654 in both tailwind and mantine

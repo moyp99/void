@@ -1,4 +1,4 @@
-import { Card, Center, Grid, Text } from '@mantine/core';
+import { Card, Center, Grid, Group, Skeleton, Text } from '@mantine/core';
 import BadgeCard from '@/components/badge-card';
 
 interface InfoSectionProps {
@@ -7,6 +7,7 @@ interface InfoSectionProps {
   immortal3Threshold?: number;
   radiantThreshold?: number;
   totalPlayers?: number;
+  isLoading?: boolean;
 }
 
 export default function InfoSection({
@@ -14,14 +15,24 @@ export default function InfoSection({
   immortal2Threshold,
   immortal3Threshold,
   radiantThreshold,
-  totalPlayers
+  totalPlayers,
+  isLoading
 }: InfoSectionProps) {
   return (
     <Grid py='1rem'>
       <Grid.Col span={12}>
         <Card shadow={'md'}>
           <Center>
-            <Text>Total Players: {totalPlayers}</Text>
+            <Group gap="xs">
+              <Text>Total Players: </Text>
+              {isLoading ? (
+                <Skeleton w={48} h={24} />
+              ) : (
+                <Text size='lg' fw={700} c='red-valorant'>
+                  {totalPlayers}
+                </Text>
+              )}
+            </Group>
           </Center>
         </Card>
       </Grid.Col>
@@ -31,6 +42,7 @@ export default function InfoSection({
           title='Immortal 1'
           imageSrc='/immortal-badge.png'
           threshold={immortal1Threshold}
+          isLoading={isLoading}
         />
       </Grid.Col>
       <Grid.Col span={3}>
@@ -38,6 +50,7 @@ export default function InfoSection({
           title='Immortal 2'
           imageSrc='/immortal-badge.png'
           threshold={immortal2Threshold}
+          isLoading={isLoading}
         />
       </Grid.Col>
       <Grid.Col span={3}>
@@ -45,16 +58,18 @@ export default function InfoSection({
           title='Immortal 3'
           imageSrc='/immortal-badge.png'
           threshold={immortal3Threshold}
+          isLoading={isLoading}
         />
       </Grid.Col>
 
       <Grid.Col span={3}>
         <BadgeCard
           title='Radiant'
-          imgWidth={48}
+          imgWidth={42}
           imgHeight={64}
           imageSrc='/radiant-badge.png'
           threshold={radiantThreshold}
+          isLoading={isLoading}
         />
       </Grid.Col>
     </Grid>
