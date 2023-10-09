@@ -25,7 +25,7 @@ export default function MenuItems() {
         <Text>Region</Text>
         <Select w="6rem" data={regionValues} value={region} onChange={handleOnRegionChange} />
       </Group>
-      <Switch checked={themeMode === 'dark'}  label='dark mode' onClick={toggleDarkMode} />
+      <Switch color="#FF4654" checked={themeMode === 'dark'}  label='dark mode' onClick={toggleDarkMode} />
     </Group>
   );
 }

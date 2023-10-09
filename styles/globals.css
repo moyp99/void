@@ -9,3 +9,25 @@
     align-items: center;
     padding: 0 1rem;
 }
+
+/*Scrollbar styles*/
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #ff4654 #ffffff;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #ff4654;
+    border-radius: 10px;
+    border: none;
+}

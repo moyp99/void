@@ -21,7 +21,7 @@ export function App({ Component, pageProps }: AppProps) {
             </Link>
             <MenuItems/>
           </AppShell.Header>
-          <AppShell.Main>
+          <AppShell.Main className="m-auto max-w-7xl">
             <Component {...pageProps} />
           </AppShell.Main>
           <AppShell.Footer className='header_and_footer'>
