@@ -2,12 +2,11 @@ import '@mantine/core/styles.css';
 import '@/styles/globals.css';
 
 import type { AppProps } from 'next/app';
-import { AppShell, Group, NativeSelect, Text } from '@mantine/core';
+import { AppShell, Text } from '@mantine/core';
 import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import ThemeProvider from '@/providers/ThemeProvider';
 import Link from 'next/link';
-import { Region } from '@/local-types';
 import NavMenuItems from "@/components/nav-menu-items";
 
 export function App({ Component, pageProps }: AppProps) {

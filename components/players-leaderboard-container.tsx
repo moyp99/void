@@ -35,7 +35,7 @@ const playerListReducer = (state: PlayerData[], action: PlayerListAction) => {
   }
 };
 
-export default function PlayersLeaderboard({
+export default function PlayersLeaderboardContainer({
   data,
   isFetching,
   isLoading,

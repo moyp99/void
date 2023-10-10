@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {Region} from "@/local-types";
 
-interface ThemeState {
+interface RegionState {
   region: Region;
 }
 
-const initialState: ThemeState = {
+const initialState: RegionState = {
     region: Region.NA
 };
 

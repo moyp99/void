@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import {Card, Title, Text, Stack} from '@mantine/core';
-import PlayersLeaderboard from '@/components/players-leaderboard';
+import PlayersLeaderboardContainer from '@/components/players-leaderboard-container';
 import { useAppSelector } from '@/store/hooks';
 import { useGetLeaderboardByRegionQuery } from '@/store/api';
 import { useState } from 'react';
@@ -49,7 +49,7 @@ export default function Home() {
               totalPlayers={data?.total_players}
               isLoading={isLoading}
             />
-            <PlayersLeaderboard
+            <PlayersLeaderboardContainer
               data={data!}
               isFetching={isFetching}
               skip={skip}

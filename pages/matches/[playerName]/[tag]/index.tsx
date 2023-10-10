@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Skeleton, Title, Grid } from '@mantine/core';
 import { useAppSelector } from '@/store/hooks';
 import { useRouter } from 'next/router';
-import CustomCard from '@/components/custom-card';
+import CustomCard from '@/components/match-card';
 
 // This should perform better if we use SSR, but rtk-query has a lots of caveats to implement it
 // in SSR.

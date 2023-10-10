@@ -4,13 +4,13 @@ import {CalendarIcon, ClockIcon, MapIcon} from "@heroicons/react/24/solid";
 import dayjs from "dayjs";
 import {MatchResponse, PlayerMatchData, Players} from "@/local-types";
 
-type CustomCard = {
+type MatchCard = {
     match: MatchResponse
     playerName: string;
     tag: string;
 }
 
-export default function CustomCard({match, playerName, tag}:CustomCard){
+export default function CustomCard({match, playerName, tag}:MatchCard){
 
     const findPlayerInMatch = (players: Players): PlayerMatchData | undefined => {
         return players.all_players.find((player) => player.name === playerName && player.tag === tag);
