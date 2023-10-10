@@ -21,14 +21,14 @@ export function App({ Component, pageProps }: AppProps) {
           header={{ height: 60 }}
           footer={{ height: 60 }}
           navbar={{
-            width: 260,
+            width: 280,
             breakpoint: 'sm',
             collapsed: { mobile: !opened, desktop: true }
           }}
           padding='md'
         >
           <CustomAppShellHeader opened={opened} toggle={toggle} />
-          <AppShell.Main className='m-auto max-w-7xl md:max-height-[100%] md:h-[100vh]'>
+          <AppShell.Main className='m-auto max-w-7xl h-[150vh] md:max-height-[100%] md:h-[100vh]'>
             <Component {...pageProps} />
           </AppShell.Main>
           <CustomAppShellNavBar />

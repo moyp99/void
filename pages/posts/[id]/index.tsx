@@ -50,7 +50,7 @@ export default function PostByIdPage() {
         <ErrorCard />
       ) : (
         <Skeleton visible={isLoading} className='w-full h-[fit]'>
-          <Stack className='w-full' gap='1.5rem'>
+          <Stack className='w-full pb-[4rem]' gap='1.5rem'>
             <Link href='/posts'>
               <Button
                 className='w-fit'
