@@ -1,22 +1,24 @@
 import Head from 'next/head';
-import {Card, Title, Text, Stack} from '@mantine/core';
+import { Card, Title, Text, Stack } from '@mantine/core';
 import PlayersLeaderboardContainer from '@/components/players-leaderboard-container';
 import { useAppSelector } from '@/store/hooks';
 import { useGetLeaderboardByRegionQuery } from '@/store/api';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import InfoSection from '@/components/info-section';
+import { useIsFirstRender } from '@/hooks/optimization';
+import { SET_REGION, useQueryArgsReducer } from '@/hooks/reducers/use-query-args-reducer';
 
 export default function Home() {
-  const [page, setPage] = useState(0);
-  const [skip, setSkip] = useState(false);
   const region = useAppSelector((state) => state.region.region);
-  const { data, isLoading, isError, isFetching } = useGetLeaderboardByRegionQuery(
-    {
-      page: page,
-      region: region
-    },
-    { skip }
-  );
+  const { queryArgs, dispatchQueryArgs } = useQueryArgsReducer(region);
+  const isFirstRender = useIsFirstRender();
+  const { data, isLoading, isError, isFetching } = useGetLeaderboardByRegionQuery(queryArgs);
+
+  useEffect(() => {
+    if (!isFirstRender) {
+      dispatchQueryArgs({ type: SET_REGION, payload: region });
+    }
+  }, [region]);
 
   return (
     <>
@@ -31,7 +33,7 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Stack>
+      <Stack className='h-full min-h-[360px]'>
         <Title className='w-full text-center'>Valorant Leaderboard</Title>
         {isError ? (
           <Card>
@@ -50,13 +52,12 @@ export default function Home() {
               isLoading={isLoading}
             />
             <PlayersLeaderboardContainer
-              data={data!}
+              queryArgs={queryArgs}
+              playersData={data?.players ?? []}
+              dispatchQueryArgs={dispatchQueryArgs}
               isFetching={isFetching}
-              skip={skip}
-              setSkip={setSkip}
-              setPage={setPage}
-              page={page}
               isLoading={isLoading}
+              totalPlayers={data?.total_players ?? 0}
             />
           </>
         )}

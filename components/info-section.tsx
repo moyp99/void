@@ -1,5 +1,6 @@
 import { Card, Center, Grid, Group, Skeleton, Text } from '@mantine/core';
 import BadgeCard from '@/components/badge-card';
+import { useMediaQuery } from '@mantine/hooks';
 
 interface InfoSectionProps {
   immortal1Threshold?: number;
@@ -18,12 +19,14 @@ export default function InfoSection({
   totalPlayers,
   isLoading
 }: InfoSectionProps) {
+  const isMd = useMediaQuery('(min-width: 768px)');
+
   return (
     <Grid py='1rem'>
       <Grid.Col span={12}>
         <Card shadow={'md'}>
           <Center>
-            <Group gap="xs">
+            <Group gap='xs'>
               <Text>Total Players: </Text>
               {isLoading ? (
                 <Skeleton w={48} h={24} />
@@ -37,7 +40,7 @@ export default function InfoSection({
         </Card>
       </Grid.Col>
 
-      <Grid.Col span={3}>
+      <Grid.Col span={isMd ? 3 : 6}>
         <BadgeCard
           title='Immortal 1'
           imageSrc='/immortal-badge.png'
@@ -45,7 +48,7 @@ export default function InfoSection({
           isLoading={isLoading}
         />
       </Grid.Col>
-      <Grid.Col span={3}>
+      <Grid.Col span={isMd ? 3 : 6}>
         <BadgeCard
           title='Immortal 2'
           imageSrc='/immortal-badge.png'
@@ -53,7 +56,7 @@ export default function InfoSection({
           isLoading={isLoading}
         />
       </Grid.Col>
-      <Grid.Col span={3}>
+      <Grid.Col span={isMd ? 3 : 6}>
         <BadgeCard
           title='Immortal 3'
           imageSrc='/immortal-badge.png'
@@ -62,7 +65,7 @@ export default function InfoSection({
         />
       </Grid.Col>
 
-      <Grid.Col span={3}>
+      <Grid.Col span={isMd ? 3 : 6}>
         <BadgeCard
           title='Radiant'
           imgWidth={42}

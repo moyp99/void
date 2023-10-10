@@ -1,50 +1,38 @@
 import { Card, LoadingOverlay, Skeleton, Table } from '@mantine/core';
-import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react';
+import { Dispatch, useCallback, useEffect, useState } from 'react';
 import { useScrollToBottomOfComponent } from '@/hooks/scroll';
-import { LeaderboardData, PlayerData } from '@/local-types';
+import { PlayerData } from '@/local-types';
 import LeaderboardTableRows from '@/components/leaderboard-table-rows';
-import { useAppSelector } from '@/store/hooks';
 import { useIsFirstRender } from '@/hooks/optimization';
-
-const PLAYER_LIST_ADD = 'PLAYER_LIST_ADD';
-const PLAYER_LIST_SET = 'PLAYER_LIST_SET';
+import {
+  INCREASE_PAGE,
+  QueryArgsActions,
+  QueryArgsState
+} from '@/hooks/reducers/use-query-args-reducer';
+import {
+  PLAYER_LIST_ADD,
+  PLAYER_LIST_SET,
+  usePlayerListReducer
+} from '@/hooks/reducers/use-players-list-reducer';
 
 type PlayersLeaderboardProps = {
-  data: LeaderboardData;
-  setSkip: Dispatch<SetStateAction<boolean>>;
-  skip: boolean;
-  setPage: Dispatch<SetStateAction<number>>;
-  page: number;
+  playersData: PlayerData[];
+  totalPlayers: number;
   isFetching: boolean;
   isLoading: boolean;
-};
-
-type PlayerListAction = {
-  type: string;
-  payload: PlayerData[];
-};
-
-const playerListReducer = (state: PlayerData[], action: PlayerListAction) => {
-  switch (action.type) {
-    case PLAYER_LIST_ADD:
-      return [...state, ...action.payload];
-    case PLAYER_LIST_SET:
-      return action.payload;
-    default:
-      return state;
-  }
+  queryArgs: QueryArgsState;
+  dispatchQueryArgs: Dispatch<QueryArgsActions>;
 };
 
 export default function PlayersLeaderboardContainer({
-  data,
+  playersData,
+  totalPlayers,
   isFetching,
   isLoading,
-  setSkip,
-  setPage,
-  page
+  queryArgs,
+  dispatchQueryArgs
 }: PlayersLeaderboardProps) {
-  const [playersList, dispatchPlayersList] = useReducer(playerListReducer, []);
-  const region = useAppSelector((state) => state.region.region);
+  const { playersList, dispatchPlayersList } = usePlayerListReducer();
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   const isBottom = useScrollToBottomOfComponent(containerRef);
   const isFirstRender = useIsFirstRender();
@@ -57,46 +45,26 @@ export default function PlayersLeaderboardContainer({
   }, []);
 
   const isScrollable = containerRef && containerRef?.scrollHeight > containerRef?.clientHeight;
-  const isPageable = data && playersList.length < data.total_players;
+  const isPageable = playersList.length < totalPlayers;
 
-  //When data changes we need to add the new players to the list and avoid re-fetching the data
+  //a full clean is needed when page is 0
   useEffect(() => {
-    if (data) {
-      dispatchPlayersList({
-        type: isFirstRender ? PLAYER_LIST_SET : PLAYER_LIST_ADD,
-        payload: data.players
-      });
-      setSkip(true);
+    if (queryArgs.page === 0 && !isFirstRender) {
+      dispatchPlayersList({ type: PLAYER_LIST_SET, payload: [] });
     }
-  }, [data, setSkip]);
+  }, [queryArgs]);
 
-  //When reach to the bottom we need to update the page number, this will trigger data fetching
-  //a valid containerRef is needed to check if the component is scrollable
   useEffect(() => {
-    if (isBottom && isScrollable && isPageable) {
-      setPage((prev) => prev + 1);
-    }
-  }, [isBottom, isScrollable, isPageable, setPage]);
+    dispatchPlayersList({ type: PLAYER_LIST_ADD, payload: playersData });
+  }, [playersData]);
 
-  //it needs to reset states when region changes
+  //increase the page number when reaching the bottom of the page
   useEffect(() => {
-    setPage(0);
-    setSkip(false);
-    if (!isFirstRender) dispatchPlayersList({ type: PLAYER_LIST_SET, payload: [] });
-  }, [region, setPage, setSkip]);
-
-  //it needs to refetch data when page changes
-  useEffect(() => {
-    setSkip(false);
-  }, [page, setSkip]);
+    if (isScrollable && isBottom && isPageable) dispatchQueryArgs({ type: INCREASE_PAGE });
+  }, [isBottom]);
 
   return (
-    <Card
-      ref={setRef}
-      shadow={"md"}
-      className='relative p-2 min-h-[160px] max-h-[60vh] md:max-h-[50vh]
-       overflow-y-scroll'
-    >
+    <Card ref={setRef} shadow={'md'} className='relative p-2 min-h-[320px] flex-1 overflow-scroll'>
       <Table verticalSpacing='sm' striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
@@ -115,6 +83,7 @@ export default function PlayersLeaderboardContainer({
           <LeaderboardTableRows playersList={playersList} />
         </Table.Tbody>
       </Table>
+
       {isLoading && <Skeleton height={300} width='100%'></Skeleton>}
       <LoadingOverlay
         visible={isFetching && !isLoading}

@@ -2,30 +2,37 @@ import '@mantine/core/styles.css';
 import '@/styles/globals.css';
 
 import type { AppProps } from 'next/app';
-import { AppShell, Text } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import ThemeProvider from '@/providers/ThemeProvider';
-import Link from 'next/link';
-import NavMenuItems from "@/components/nav-menu-items";
+import CustomAppShellHeader from '@/components/custom-app-shell-header';
+import { useDisclosure } from '@mantine/hooks';
+import CustomAppShellNavBar from '@/components/custom-app-shell-nav-bar';
+import CustomAppShellFooter from '@/components/custom-app-shell-footer';
 
 export function App({ Component, pageProps }: AppProps) {
+  const [opened, { toggle }] = useDisclosure();
+
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <AppShell header={{ height: 60 }} footer={{ height: 60 }} padding='md'>
-          <AppShell.Header className='header_and_footer justify-between'>
-            <Link href='/'>
-              <Text fw={700}>(Game) Valorant</Text>
-            </Link>
-            <NavMenuItems/>
-          </AppShell.Header>
-          <AppShell.Main className="m-auto max-w-7xl">
+        <AppShell
+          header={{ height: 60 }}
+          footer={{ height: 60 }}
+          navbar={{
+            width: 260,
+            breakpoint: 'sm',
+            collapsed: { mobile: !opened, desktop: true }
+          }}
+          padding='md'
+        >
+          <CustomAppShellHeader opened={opened} toggle={toggle} />
+          <AppShell.Main className='m-auto max-w-7xl md:max-height-[100%] md:h-[100vh]'>
             <Component {...pageProps} />
           </AppShell.Main>
-          <AppShell.Footer className='header_and_footer'>
-            <Text fw={500}>Made by Moises J. Perez</Text>
-          </AppShell.Footer>
+          <CustomAppShellNavBar />
+          <CustomAppShellFooter />
         </AppShell>
       </ThemeProvider>
     </Provider>

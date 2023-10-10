@@ -1,15 +1,17 @@
 /** @type {import('tailwindcss').Config} */
+import colors from 'tailwindcss/colors';
+
 const redValorant = '#FF4654';
 const darkValorant = '#0F1923';
 
-module.exports = {
+export default {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
-    colors: { 'red-valorant': redValorant, 'dark-valorant': darkValorant },
+    colors: { 'red-valorant': redValorant, 'dark-valorant': darkValorant, ...colors },
 
     extend: {
       backgroundImage: {

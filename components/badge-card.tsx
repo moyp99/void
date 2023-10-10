@@ -20,7 +20,7 @@ export default function BadgeCard({
 }: CardProps) {
   return (
     <Card shadow='md'>
-      <Stack align='center' gap='xs'>
+      <Stack align='center' gap='0'>
         <Image
           width={imgWidth}
           height={imgHeight}
