@@ -16,7 +16,7 @@ export default function Home() {
   const region = useAppSelector((state) => state.region.region);
   const { queryArgs, dispatchQueryArgs } = useLeaderboardQueryArgsReducer(region);
   const isFirstRender = useIsFirstRender();
-  const { data, isLoading, isError, isFetching } = useGetLeaderboardByRegionQuery(queryArgs);
+  const { data, isLoading, isError, isFetching,  } = useGetLeaderboardByRegionQuery(queryArgs);
 
   useEffect(() => {
     if (!isFirstRender) {

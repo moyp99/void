@@ -3,7 +3,6 @@ import { Dispatch, useEffect } from 'react';
 import { useScrollToBottomOfWindow } from '@/hooks/scroll';
 import { PlayerData } from '@/local-types';
 import LeaderboardTableRows from '@/components/leaderboard-table-rows';
-import { useIsFirstRender } from '@/hooks/optimization';
 import {
   INCREASE_PAGE,
   LeaderboardQueryArgsActions,
@@ -33,31 +32,37 @@ export default function PlayersLeaderboardContainer({
   dispatchQueryArgs
 }: PlayersLeaderboardProps) {
   const { playersList, dispatchPlayersList } = usePlayerListReducer();
-  const isFirstRender = useIsFirstRender();
   const isBottom = useScrollToBottomOfWindow();
   const isPageable = playersList.length < totalPlayers;
 
   //a full clean is needed when page is 0
   useEffect(() => {
-    if (queryArgs.page === 0 && !isFirstRender) {
+    if (queryArgs.page === 0) {
       dispatchPlayersList({ type: PLAYER_LIST_SET, payload: [] });
     }
   }, [queryArgs]);
 
+  //chain a set of players when the players list is empty
   useEffect(() => {
-    dispatchPlayersList({ type: PLAYER_LIST_ADD, payload: playersData });
+    if (playersList.length === 0 && playersData.length > 0 && !isFetching) {
+      dispatchPlayersList({ type: PLAYER_LIST_SET, payload: playersData });
+    }
+  }, [playersList, playersData, isFetching]);
+
+  //add a set of players when the page number is greater than 0
+  useEffect(() => {
+    if (queryArgs.page >= 1) {
+      dispatchPlayersList({ type: PLAYER_LIST_ADD, payload: playersData });
+    }
   }, [playersData]);
 
   //increase the page number when reaching the bottom of the page nad isPageable
   useEffect(() => {
-    if (isBottom && isPageable) dispatchQueryArgs({ type: INCREASE_PAGE });
+    if (isBottom && isPageable && !isFetching) dispatchQueryArgs({ type: INCREASE_PAGE });
   }, [isBottom]);
 
   return (
-    <Card
-      shadow={'md'}
-      className='relative p-2 min-h-[320px] flex-1 overflow-x-scroll'
-    >
+    <Card shadow={'md'} className='relative p-2 min-h-[320px] flex-1 overflow-x-scroll'>
       <Table verticalSpacing='sm' striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
