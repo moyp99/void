@@ -1,4 +1,4 @@
-import { Avatar, Badge, Card, Divider, Flex, Group, Paper, Stack, Text } from '@mantine/core';
+import { Avatar, Card, Divider, Flex, Group, Stack, Text } from '@mantine/core';
 import Image from 'next/image';
 import { CalendarIcon, ClockIcon, MapIcon } from '@heroicons/react/24/solid';
 import dayjs from 'dayjs';

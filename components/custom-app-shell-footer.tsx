@@ -1,6 +1,4 @@
-import { AppShell, Burger, Group, Stack, Text } from '@mantine/core';
-import ThemeSwitch from '@/components/theme-switch';
-import RegionDropdown from '@/components/region-dropdown';
+import { AppShell, Text } from '@mantine/core';
 
 export default function CustomAppShellFooter() {
   return (

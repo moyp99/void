@@ -6,9 +6,9 @@ import LeaderboardTableRows from '@/components/leaderboard-table-rows';
 import { useIsFirstRender } from '@/hooks/optimization';
 import {
   INCREASE_PAGE,
-  QueryArgsActions,
-  QueryArgsState
-} from '@/hooks/reducers/use-query-args-reducer';
+  LeaderboardQueryArgsActions,
+  LeaderboardQueryArgsState
+} from '@/hooks/reducers/use-leaderboard-query-args-reducer';
 import {
   PLAYER_LIST_ADD,
   PLAYER_LIST_SET,
@@ -20,8 +20,8 @@ type PlayersLeaderboardProps = {
   totalPlayers: number;
   isFetching: boolean;
   isLoading: boolean;
-  queryArgs: QueryArgsState;
-  dispatchQueryArgs: Dispatch<QueryArgsActions>;
+  queryArgs: LeaderboardQueryArgsState;
+  dispatchQueryArgs: Dispatch<LeaderboardQueryArgsActions>;
 };
 
 export default function PlayersLeaderboardContainer({

@@ -1,67 +1,26 @@
 import Head from 'next/head';
-import { Card, Title, Text, Stack } from '@mantine/core';
-import { useEffect, useReducer, useState } from 'react';
+import { Title, Stack, Skeleton } from '@mantine/core';
+import { useEffect } from 'react';
 import { useGetPostsQuery } from '@/store/api';
-import { PostData } from '@/local-types';
 import { useScrollToBottomOfWindow } from '@/hooks/scroll';
-import { useIsFirstRender } from '@/hooks/optimization';
 import ObservedPostCard from '@/components/observed-post-card';
 import { useAppSelector } from '@/store/hooks';
 import ErrorCard from '@/components/error-card';
-
-const POSTS_ADD = 'POSTS_ADD';
-const POSTS_SET = 'POSTS_SET';
-
-type PostsAction = {
-  type: string;
-  payload: PostData[];
-};
-
-const postsReducer = (state: PostData[], action: PostsAction) => {
-  switch (action.type) {
-    case POSTS_ADD:
-      return [...state, ...action.payload];
-    case POSTS_SET:
-      return action.payload;
-    default:
-      return state;
-  }
-};
+import { INCREASE_PAGE, usePostsArgsReducer } from '@/hooks/reducers/use-posts-args-reducer';
+import { usePostsReducer } from '@/hooks/reducers/use-posts-reducer';
 
 export default function Home() {
-  const [page, setPage] = useState(1);
-  const [skip, setSkip] = useState(false);
   const search = useAppSelector((state) => state.search.search);
-  const { data, isError } = useGetPostsQuery({ page, limit: 5, search: search }, { skip });
-  const [posts, dispatchPosts] = useReducer(postsReducer, []);
+  const { postsArgs, dispatchPostsArgs } = usePostsArgsReducer(search);
+  const { data, isLoading, isError } = useGetPostsQuery(postsArgs);
+  const { posts } = usePostsReducer(data ?? [], postsArgs);
   const isBottom = useScrollToBottomOfWindow();
-  const isFirstRender = useIsFirstRender();
-
-  useEffect(() => {
-    if (data) {
-      dispatchPosts({
-        type: isFirstRender ? POSTS_SET : POSTS_ADD,
-        payload: data
-      });
-    }
-    setSkip(true);
-  }, [data, isFirstRender, setSkip]);
 
   useEffect(() => {
     if (isBottom) {
-      setPage((prev) => prev + 1);
+      dispatchPostsArgs({ type: INCREASE_PAGE });
     }
-  }, [isBottom, setPage]);
-
-  useEffect(() => {
-    setPage(1);
-    setSkip(false);
-    if (!isFirstRender) dispatchPosts({ type: POSTS_SET, payload: [] });
-  }, [isFirstRender, search]);
-
-  useEffect(() => {
-    setSkip(false);
-  }, [page, setSkip]);
+  }, [isBottom]);
 
   return (
     <>
@@ -82,9 +41,11 @@ export default function Home() {
         <Stack>
           <Title className='w-full text-center'>Latest Posts</Title>
           <Stack align='center' gap='2rem'>
-            {posts.map((postData) => (
-              <ObservedPostCard key={postData.id} postData={postData} />
-            ))}
+            {isLoading
+              ? [1, 2, 3].map((i) => (
+                  <Skeleton key={i} className='w-[360px] min-h-[320px] md:w-[460px]' />
+                ))
+              : posts.map((postData) => <ObservedPostCard key={postData.id} postData={postData} />)}
           </Stack>
         </Stack>
       )}

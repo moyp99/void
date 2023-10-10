@@ -1,16 +1,17 @@
 import Head from 'next/head';
-import { Card, Title, Text, Stack } from '@mantine/core';
+import { Title, Stack } from '@mantine/core';
 import PlayersLeaderboardContainer from '@/components/players-leaderboard-container';
 import { useAppSelector } from '@/store/hooks';
 import { useGetLeaderboardByRegionQuery } from '@/store/api';
 import { useEffect } from 'react';
 import InfoSection from '@/components/info-section';
 import { useIsFirstRender } from '@/hooks/optimization';
-import { SET_REGION, useQueryArgsReducer } from '@/hooks/reducers/use-query-args-reducer';
+import { SET_REGION, useLeaderboardQueryArgsReducer } from '@/hooks/reducers/use-leaderboard-query-args-reducer';
+import ErrorCard from "@/components/error-card";
 
 export default function Home() {
   const region = useAppSelector((state) => state.region.region);
-  const { queryArgs, dispatchQueryArgs } = useQueryArgsReducer(region);
+  const { queryArgs, dispatchQueryArgs } = useLeaderboardQueryArgsReducer(region);
   const isFirstRender = useIsFirstRender();
   const { data, isLoading, isError, isFetching } = useGetLeaderboardByRegionQuery(queryArgs);
 
@@ -36,11 +37,7 @@ export default function Home() {
       <Stack className='h-full min-h-[360px]'>
         <Title className='w-full text-center'>Valorant Leaderboard</Title>
         {isError ? (
-          <Card>
-            <Text fw={500} size='md' c='red'>
-              An unexpected error occurred.
-            </Text>
-          </Card>
+          <ErrorCard/>
         ) : (
           <>
             <InfoSection

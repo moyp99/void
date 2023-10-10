@@ -3,14 +3,14 @@ import { useReducer } from 'react';
 export const INCREASE_PAGE = 'INCREASE_PAGE';
 export const SET_REGION = 'SET_REGION';
 
-export type QueryArgsState = {
+export type LeaderboardQueryArgsState = {
     page: number;
     region: string;
 };
 
-export type QueryArgsActions = { type: string; payload?: string };
+export type LeaderboardQueryArgsActions = { type: string; payload?: string };
 
-const queryArgsReducer = (state: QueryArgsState, action: QueryArgsActions): QueryArgsState => {
+const leaderboardQueryArgsReducer = (state: LeaderboardQueryArgsState, action: LeaderboardQueryArgsActions): LeaderboardQueryArgsState => {
     switch (action.type) {
         case INCREASE_PAGE:
             return { ...state, page: state.page + 1 };
@@ -21,8 +21,8 @@ const queryArgsReducer = (state: QueryArgsState, action: QueryArgsActions): Quer
     }
 };
 
-export const useQueryArgsReducer = (initialRegion: string) => {
-    const [queryArgs, dispatchQueryArgs] = useReducer(queryArgsReducer, {
+export const useLeaderboardQueryArgsReducer = (initialRegion: string) => {
+    const [queryArgs, dispatchQueryArgs] = useReducer(leaderboardQueryArgsReducer, {
         page: 0,
         region: initialRegion,
     });
