@@ -28,7 +28,7 @@ export function App({ Component, pageProps }: AppProps) {
           padding='md'
         >
           <CustomAppShellHeader opened={opened} toggle={toggle} />
-          <AppShell.Main className='m-auto max-w-7xl h-[150vh] md:max-height-[100%] md:h-[100vh]'>
+          <AppShell.Main className='m-auto max-w-7xl'>
             <Component {...pageProps} />
           </AppShell.Main>
           <CustomAppShellNavBar />

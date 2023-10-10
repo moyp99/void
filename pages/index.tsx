@@ -6,8 +6,11 @@ import { useGetLeaderboardByRegionQuery } from '@/store/api';
 import { useEffect } from 'react';
 import InfoSection from '@/components/info-section';
 import { useIsFirstRender } from '@/hooks/optimization';
-import { SET_REGION, useLeaderboardQueryArgsReducer } from '@/hooks/reducers/use-leaderboard-query-args-reducer';
-import ErrorCard from "@/components/error-card";
+import {
+  SET_REGION,
+  useLeaderboardQueryArgsReducer
+} from '@/hooks/reducers/use-leaderboard-query-args-reducer';
+import ErrorCard from '@/components/error-card';
 
 export default function Home() {
   const region = useAppSelector((state) => state.region.region);
@@ -37,7 +40,7 @@ export default function Home() {
       <Stack className='h-full min-h-[360px]'>
         <Title className='w-full text-center'>Valorant Leaderboard</Title>
         {isError ? (
-          <ErrorCard/>
+          <ErrorCard />
         ) : (
           <>
             <InfoSection

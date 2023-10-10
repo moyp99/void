@@ -1,6 +1,6 @@
 import { Card, LoadingOverlay, Skeleton, Table } from '@mantine/core';
-import { Dispatch, useCallback, useEffect, useState } from 'react';
-import { useScrollToBottomOfComponent } from '@/hooks/scroll';
+import { Dispatch, useEffect } from 'react';
+import { useScrollToBottomOfWindow } from '@/hooks/scroll';
 import { PlayerData } from '@/local-types';
 import LeaderboardTableRows from '@/components/leaderboard-table-rows';
 import { useIsFirstRender } from '@/hooks/optimization';
@@ -33,18 +33,8 @@ export default function PlayersLeaderboardContainer({
   dispatchQueryArgs
 }: PlayersLeaderboardProps) {
   const { playersList, dispatchPlayersList } = usePlayerListReducer();
-  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
-  const isBottom = useScrollToBottomOfComponent(containerRef);
   const isFirstRender = useIsFirstRender();
-
-  //I used a callback 'cause this way the ref can be updated once rendered.
-  const setRef = useCallback((node: HTMLDivElement) => {
-    if (node) {
-      setContainerRef(node);
-    }
-  }, []);
-
-  const isScrollable = containerRef && containerRef?.scrollHeight > containerRef?.clientHeight;
+  const isBottom = useScrollToBottomOfWindow();
   const isPageable = playersList.length < totalPlayers;
 
   //a full clean is needed when page is 0
@@ -58,13 +48,16 @@ export default function PlayersLeaderboardContainer({
     dispatchPlayersList({ type: PLAYER_LIST_ADD, payload: playersData });
   }, [playersData]);
 
-  //increase the page number when reaching the bottom of the page
+  //increase the page number when reaching the bottom of the page nad isPageable
   useEffect(() => {
-    if (isScrollable && isBottom && isPageable) dispatchQueryArgs({ type: INCREASE_PAGE });
+    if (isBottom && isPageable) dispatchQueryArgs({ type: INCREASE_PAGE });
   }, [isBottom]);
 
   return (
-    <Card ref={setRef} shadow={'md'} className='relative p-2 min-h-[320px] flex-1 overflow-scroll'>
+    <Card
+      shadow={'md'}
+      className='relative p-2 min-h-[320px] flex-1 overflow-x-scroll'
+    >
       <Table verticalSpacing='sm' striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
